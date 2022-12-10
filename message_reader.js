@@ -5,7 +5,6 @@ module.exports = class MessageReader extends EventEmitter
     constructor()
     {
         super();
-
         this._accumulatedData = Buffer.alloc(0);
     }
 
