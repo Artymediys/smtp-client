@@ -17,7 +17,7 @@ module.exports = class MessageReader extends EventEmitter
 
             this.emit("message", messageBuffer.toString());
 
-            this._accumulatedData = this._accumulatedData.subarray(delimiterIndex + 4);
+            this._accumulatedData = this._accumulatedData.subarray(delimiterIndex + 2);
             this._read();
         }
     }
