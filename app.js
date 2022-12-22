@@ -45,7 +45,6 @@ module.exports = class App {
         await this._auth();
         await this._sendEmail(FS.readFileSync(this._config.emailPath, {encoding: "utf-8"}));
 
-        // jtdxzshtfcfavvjm
         this._handleResponse(await this.client.quit());
         this.stop();
         console.log("Email sent successfully!");
