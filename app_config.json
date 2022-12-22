@@ -5,8 +5,8 @@
     "isTlS": true
   },
   "auth": {
-    "login": "artymediys",
-    "password": "jtdxzshtfcfavvjm"
+    "login": "",
+    "password": ""
   },
   "emailPath": "./email.txt"
 }
