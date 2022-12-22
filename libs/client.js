@@ -4,10 +4,10 @@ const Net = require("net");
 const MessageReader = require("./message_reader.js");
 
 module.exports = class Client {
-    constructor(host = "smtp.yandex.ru", port = 465, isTLS = true) {
-        this._host = host;
-        this._port = port;
-        this._isTLS = isTLS;
+    constructor(options) {
+        this._host = options.host;
+        this._port = options.port;
+        this._isTLS = options.isTlS;
         this._localHost = OS.hostname();
 
         this._handlerQueue = [];
@@ -50,12 +50,40 @@ module.exports = class Client {
         return this._command("AUTH LOGIN");
     }
 
+    login(login) {
+        return this._command(this._stringToBase64(login));
+    }
+
+    password(password) {
+        return this._command(this._stringToBase64(password));
+    }
+
     mailFrom(email) {
         return this._command(`MAIL FROM:<${email}>`);
     }
 
     rcptTo(email) {
         return this._command(`RCPT TO:<${email}>`);
+    }
+
+    data() {
+        return this._command("DATA");
+    }
+
+    async send(text) {
+        const lines = text.replace(/\r?\n/g, "\r\n").split("\r\n");
+
+        for (let line of lines) {
+            if (line === ".") {
+                line = "..";
+            }
+            this._socket.write(line + "\r\n");
+        }
+        this._socket.write(".\r\n");
+
+        return new Promise(resolve => {
+            this._handlerQueue.push(message => resolve(message));
+        });
     }
 
     quit() {
@@ -66,16 +94,8 @@ module.exports = class Client {
         this._socket.destroy();
     }
 
-    login(login) {
-        return this._command(login);
-    }
-
-    password(password) {
-        return this._command(password);
-    }
-
     _command(cmd) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             this._socket.write(cmd + "\r\n");
 
             this._handlerQueue.push(message => resolve(message));
@@ -89,6 +109,10 @@ module.exports = class Client {
             statusCode,
             info: data.substring(4)
         };
+    }
+
+    _stringToBase64(str) {
+        return Buffer.from(str).toString("base64");
     }
 }
 

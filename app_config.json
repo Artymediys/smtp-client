@@ -1,0 +1,12 @@
+{
+  "connection": {
+    "host": "smtp.yandex.ru",
+    "port": 465,
+    "isTlS": true
+  },
+  "auth": {
+    "login": "artymediys",
+    "password": "jtdxzshtfcfavvjm"
+  },
+  "emailPath": "./email.txt"
+}

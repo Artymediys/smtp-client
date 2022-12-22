@@ -1,4 +1,7 @@
-const CLI = require("./cli");
+const App = require("./app.js");
 
-const cli = new CLI();
-cli.newClient();
+const app = new App();
+app.run().catch(error => {
+    console.log(error)
+    app.stop();
+});
